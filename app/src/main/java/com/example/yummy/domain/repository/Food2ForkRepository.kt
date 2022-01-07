@@ -7,6 +7,6 @@ interface Food2ForkRepository {
 
     suspend fun getRecipeList(query: String, page: Int): RecipeListDto
 
-    suspend fun getRecipeDetail(id: Int): RecipeDetailDto
+    suspend fun getRecipeDetail(id: String): RecipeDetailDto
 
 }

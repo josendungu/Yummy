@@ -14,7 +14,9 @@ class Food2ForkRepositoryImpl @Inject constructor(
         return api.searchRecipe(Constants.API_TOKEN, page, query)
     }
 
-    override suspend fun getRecipeDetail(id: Int): RecipeDetailDto {
-        return api.get(Constants.API_TOKEN, id)
+    override suspend fun getRecipeDetail(id: String): RecipeDetailDto {
+        return api.get(Constants.API_TOKEN, Integer.parseInt(id))
     }
+
+
 }

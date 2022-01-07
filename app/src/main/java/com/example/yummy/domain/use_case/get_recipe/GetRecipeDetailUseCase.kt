@@ -15,7 +15,7 @@ class GetRecipeDetailUseCase @Inject constructor(
     private val repository: Food2ForkRepository
 ) {
 
-    operator fun invoke(id: Int): Flow<Resource<RecipeDetail>> = flow {
+    operator fun invoke(id: String): Flow<Resource<RecipeDetail>> = flow {
         try {
             emit(Resource.Loading())
             val recipe = repository.getRecipeDetail(id).toRecipeDetail()
