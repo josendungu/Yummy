@@ -30,7 +30,7 @@ fun RecipeItemComponent(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp, horizontal = 30.dp)
-            .clickable { onClick },
+            .clickable { onClick() },
         shape = MaterialTheme.shapes.small,
         elevation = 7.dp,
     ) {
@@ -79,20 +79,3 @@ fun RecipeItemComponent(
 }
 
 
-@Preview
-@Composable
-fun ItemPreview() {
-
-    val recipe = RecipeDetail(
-        description = "",
-        featured_image = "",
-        ingredients = listOf("Chicken", "Onions"),
-        pk = 100,
-        rating = 57,
-        title = "Chicken Tika"
-
-    )
-    RecipeItemComponent(recipe = recipe) {
-
-    }
-}

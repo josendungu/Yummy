@@ -1,11 +1,13 @@
 package com.example.yummy.presentation.recipe_detail
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.yummy.common.Constants
 import androidx.lifecycle.viewModelScope
+import com.example.yummy.common.Constants.TAG
 import com.example.yummy.common.Resource
 import com.example.yummy.domain.use_case.get_recipe.GetRecipeDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +29,6 @@ class RecipeDetailViewModel @Inject constructor(
         savedStateHandle.get<String>(Constants.PARAM_RECIPE_ID)?.let {
             getRecipeDetails(it)
         }
-
     }
 
     private fun getRecipeDetails(recipeId: String) {
@@ -44,6 +45,7 @@ class RecipeDetailViewModel @Inject constructor(
                 }
 
                 is Resource.Loading -> {
+                    Log.d(TAG, "getRecipeDetails: loading")
                     _state.value = RecipeDetailState(isLoading = true)
                 }
             }

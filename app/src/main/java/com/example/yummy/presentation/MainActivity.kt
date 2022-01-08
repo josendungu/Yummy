@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(
-                            route = Screen.RecipeDetailScreen.route
+                            route = Screen.RecipeDetailScreen.route + "/{recipeId}"
                         ) {
                             RecipeDetailScreen()
                         }
