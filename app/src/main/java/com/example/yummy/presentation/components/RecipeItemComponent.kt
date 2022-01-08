@@ -9,11 +9,15 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.yummy.R
+import com.example.yummy.common.Constants
+import com.example.yummy.common.util.loadPicture
 import com.example.yummy.domain.model.RecipeDetail
 
 @Composable
@@ -31,14 +35,22 @@ fun RecipeItemComponent(
         elevation = 7.dp,
     ) {
         Column {
-            Image(
-                painter = painterResource(id = R.drawable.empty_plate),
-                contentDescription = "",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp),
-                contentScale = ContentScale.Crop
-            )
+            val image = loadPicture(
+                url = recipe.featured_image,
+                defaultImage = Constants.DEFAULT_RECIPE_IMAGE
+            ).value
+
+            image?.let {
+                Image(
+                    bitmap = it.asImageBitmap(),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
