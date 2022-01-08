@@ -1,5 +1,6 @@
 package com.example.yummy.data.remote.dto
 
+import com.example.yummy.common.util.DateUtils
 import com.example.yummy.domain.model.RecipeDetail
 
 data class RecipeDetailDto(
@@ -9,8 +10,8 @@ data class RecipeDetailDto(
     val description: String,
     val featured_image: String,
     val ingredients: List<String>,
-    val long_date_added: Int,
-    val long_date_updated: Int,
+    val long_date_added: Long,
+    val long_date_updated: Long,
     val pk: Int,
     val publisher: String,
     val rating: Int,
@@ -20,11 +21,12 @@ data class RecipeDetailDto(
 
 fun RecipeDetailDto.toRecipeDetail(): RecipeDetail{
     return RecipeDetail(
-        description = description,
         featured_image = featured_image,
         ingredients = ingredients,
-        pk = pk,
+        id = pk,
         rating = rating,
-        title = title
+        title = title,
+        date_added = DateUtils.longToDate(long_date_added),
+        date_updated = DateUtils.longToDate(long_date_updated)
     )
 }
