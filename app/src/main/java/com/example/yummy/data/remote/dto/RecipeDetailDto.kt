@@ -3,7 +3,7 @@ package com.example.yummy.data.remote.dto
 import com.example.yummy.domain.model.RecipeDetail
 
 data class RecipeDetailDto(
-    val cooking_instructions: Any,
+    val cooking_instructions: String,
     val date_added: String,
     val date_updated: String,
     val description: String,
@@ -20,7 +20,6 @@ data class RecipeDetailDto(
 
 fun RecipeDetailDto.toRecipeDetail(): RecipeDetail{
     return RecipeDetail(
-        cooking_instructions = cooking_instructions,
         description = description,
         featured_image = featured_image,
         ingredients = ingredients,

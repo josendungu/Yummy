@@ -14,7 +14,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.yummy.presentation.recipe_detail.RecipeDetailScreen
 import com.example.yummy.presentation.recipe_list.RecipeListScreen
 import com.example.yummy.presentation.ui.theme.YummyTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +33,7 @@ class MainActivity : ComponentActivity() {
                         composable(
                             route = Screen.RecipeListScreen.route
                         ) {
-                            RecipeListScreen()
+                            RecipeListScreen(navController = navController)
                         }
 
                         composable(
