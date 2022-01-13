@@ -1,5 +1,6 @@
 package com.example.yummy.presentation.recipe_list
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -14,8 +15,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.yummy.common.Constants.RECIPE_PAGINATION_PAGE_SIZE
+import com.example.yummy.common.Constants.TAG
+import com.example.yummy.common.util.DialogQueue
 import com.example.yummy.presentation.Screen
 import com.example.yummy.presentation.components.RecipeItemComponent
+import com.example.yummy.presentation.ui.theme.YummyTheme
 import kotlinx.coroutines.delay
 
 @Composable
@@ -24,19 +28,28 @@ fun RecipeListScreen(
     navController: NavController
 ) {
 
-    val state = viewModel.state.value
-    Content(
-        state = viewModel.state.value,
-        navController = navController,
-        onItemChangePosition = {
-            viewModel.onChangeRecipeScrollPosition(it)
-        },
-        loadNextPage = {
-            if ((it + 1) >= (state.page * RECIPE_PAGINATION_PAGE_SIZE) && !state.recipeIncrementLoading) {
-                viewModel.nextPage()
+    val dialogQueue = viewModel.dialogQueue
+
+    YummyTheme(
+        dialogQueue = dialogQueue.queue.value
+    ) {
+        val state = viewModel.state.value
+        Content(
+            state = viewModel.state.value,
+            navController = navController,
+            onItemChangePosition = {
+                viewModel.onChangeRecipeScrollPosition(it)
+            },
+            loadNextPage = {
+                Log.d(TAG, "RecipeListScreen: ${state.recipeIncrementLoading}")
+                if ((it + 1) >= (state.page * RECIPE_PAGINATION_PAGE_SIZE) && !state.recipeIncrementLoading) {
+                    viewModel.nextPage()
+                }
             }
-        }
-    )
+        )
+
+    }
+
 
 }
 
@@ -51,6 +64,7 @@ fun Content(
     val recipes = state.recipes
     val error = state.error
     val loading = state.isLoading
+    val incrementError = state.recipeIncrementError
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -67,14 +81,22 @@ fun Content(
             if (!loading) {
                 item {
 
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .height(13.dp)
-                                .width(13.dp),
-                            strokeWidth = 2.dp
+                    if (incrementError) {
+                        Text(
+                            text = "Error occurred"
                         )
+                    }
+
+                    if (!incrementError){
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .height(13.dp)
+                                    .width(13.dp),
+                                strokeWidth = 2.dp
+                            )
+                        }
                     }
 
 

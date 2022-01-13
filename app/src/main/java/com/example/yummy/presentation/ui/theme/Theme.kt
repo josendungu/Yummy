@@ -5,6 +5,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import com.example.yummy.common.util.DialogQueue
+import com.example.yummy.presentation.components.GenericDialog
+import com.example.yummy.presentation.components.GenericDialogInfo
+import java.util.*
 
 private val DarkColorPalette = darkColors(
     primary = Red500,
@@ -23,7 +27,11 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun YummyTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
+fun YummyTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    dialogQueue: Queue<GenericDialogInfo>? = null,
+    content: @Composable() () -> Unit
+) {
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {
@@ -36,4 +44,23 @@ fun YummyTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable(
         shapes = Shapes,
         content = content
     )
+    if (dialogQueue != null) {
+        ProcessDialogQueue(dialogQueue = dialogQueue)
+    }
+}
+
+
+@Composable
+fun ProcessDialogQueue(
+    dialogQueue: Queue<GenericDialogInfo>
+){
+    dialogQueue.peek()?.let {
+        GenericDialog(
+            onDismiss = { it.onDismiss },
+            title = it.title,
+            description = it.description,
+            positiveAction = it.positiveAction,
+            negativeAction = it.negativeAction
+        )
+    }
 }

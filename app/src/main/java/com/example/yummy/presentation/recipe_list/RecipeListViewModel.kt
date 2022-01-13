@@ -1,5 +1,6 @@
 package com.example.yummy.presentation.recipe_list
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -7,6 +8,8 @@ import com.example.yummy.common.Resource
 import com.example.yummy.domain.use_case.get_recipes.GetRecipesUseCase
 import androidx.lifecycle.viewModelScope
 import com.example.yummy.common.Constants.RECIPE_PAGINATION_PAGE_SIZE
+import com.example.yummy.common.Constants.TAG
+import com.example.yummy.common.util.DialogQueue
 import com.example.yummy.domain.model.RecipeDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -19,11 +22,13 @@ import javax.inject.Inject
 class RecipeListViewModel @Inject constructor(
     private val getRecipesUseCase: GetRecipesUseCase,
     private val restoreRecipesUseCase: GetRecipesUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _state = mutableStateOf(RecipeListState())
     val state: State<RecipeListState> = _state
     var recipeListScrollPosition = 0
+
+    val dialogQueue = DialogQueue()
 
     init {
         getRecipeList()
@@ -32,22 +37,49 @@ class RecipeListViewModel @Inject constructor(
     private fun getRecipeList() {
         val searchString = "Beef"
         val page = state.value.page
+        val recipes = state.value.recipes
+
+        _state.value = RecipeListState(
+            page = page,
+            recipes = recipes
+        )
+
+        Log.d(TAG, "getRecipeList: Reloaded happening")
+
         getRecipesUseCase.invoke(searchString, page).onEach {
             when (it) {
                 is Resource.Success -> {
-                    appendRecipe(it.data?: emptyList())
+                    appendRecipe(it.data ?: emptyList())
                 }
 
                 is Resource.Error -> {
-                    _state.value = RecipeListState(error = it.message ?: "An unexpected error occurred")
+
+                    if (page == 1) {
+                        dialogQueue.appendErrorMessage(
+                            title = "Error",
+                            description = it.message ?: "An unexpected error occurred"
+                        )
+                    } else {
+                        _state.value = RecipeListState(
+                            recipes = recipes,
+                            page = page - 1,
+                            recipeIncrementError = true
+                        )
+
+                    }
+
                 }
 
                 is Resource.Loading -> {
 
-                    if (page == 1){
+                    if (page == 1) {
                         _state.value = RecipeListState(isLoading = true)
                     } else {
-                        state.value.recipeIncrementLoading = true
+                        _state.value = RecipeListState(
+                            page = page,
+                            recipes = recipes,
+                            recipeIncrementLoading = true
+                        )
                     }
                 }
             }
@@ -55,7 +87,14 @@ class RecipeListViewModel @Inject constructor(
     }
 
     private fun resetState() {
-        _state.value = RecipeListState(recipes = emptyList(), error = "", isLoading = false, page = 1, recipeIncrementLoading = false)
+        _state.value = RecipeListState(
+            recipes = emptyList(),
+            error = "",
+            isLoading = false,
+            page = 1,
+            recipeIncrementLoading = false,
+            recipeIncrementError = false
+        )
     }
 
     private fun incrementPage() {
@@ -72,17 +111,13 @@ class RecipeListViewModel @Inject constructor(
         val page = state.value.page
         _state.value = RecipeListState(recipes = current, page = page)
 
-        if (state.value.recipeIncrementLoading){
-            state.value.recipeIncrementLoading  = false
-        }
     }
 
     fun nextPage() {
         viewModelScope.launch {
-            if ((recipeListScrollPosition + 1) >= (state.value.page * RECIPE_PAGINATION_PAGE_SIZE) ) {
-                state.value.recipeIncrementLoading = true
+            if ((recipeListScrollPosition + 1) >= (state.value.page * RECIPE_PAGINATION_PAGE_SIZE)) {
                 incrementPage()
-                if (state.value.page > 1){
+                if (state.value.page > 1) {
                     delay(2000)
                     getRecipeList()
                 }

@@ -26,11 +26,11 @@ data class NegativeAction(
 class GenericDialogInfo private constructor(
     builder: GenericDialogInfo.Builder
 ){
-    private val title: String
-    private val onDismiss: () -> Unit
-    private val description: String?
-    private val positiveAction: PositiveAction?
-    private val negativeAction: NegativeAction?
+    val title: String
+    val onDismiss: () -> Unit
+    val description: String?
+    val positiveAction: PositiveAction?
+    val negativeAction: NegativeAction?
 
     init {
         if (builder.title == null){
@@ -97,10 +97,9 @@ class GenericDialogInfo private constructor(
     }
 }
 
-
 @Composable
 fun GenericDialog(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
     title: String,
     description: String? = null,

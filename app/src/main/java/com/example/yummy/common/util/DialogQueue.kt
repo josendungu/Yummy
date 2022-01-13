@@ -7,7 +7,8 @@ import com.example.yummy.presentation.components.PositiveAction
 import java.util.*
 
 class DialogQueue{
-    private val queue: MutableState<Queue<GenericDialogInfo>> = mutableStateOf(LinkedList())
+
+    val queue: MutableState<Queue<GenericDialogInfo>> = mutableStateOf(LinkedList())
 
     private fun removeHeadMessage(){
         if (queue.value.isNotEmpty()){
@@ -22,6 +23,7 @@ class DialogQueue{
         queue.value.offer(
             GenericDialogInfo.Builder()
                 .title(title)
+                .onDismiss(this::removeHeadMessage)
                 .description(description)
                 .positiveAction(PositiveAction(
                     positiveBtnText = "OK",
