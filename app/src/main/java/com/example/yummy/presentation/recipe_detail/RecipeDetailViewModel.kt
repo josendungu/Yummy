@@ -11,6 +11,7 @@ import com.example.yummy.common.Constants.TAG
 import com.example.yummy.common.Resource
 import com.example.yummy.common.util.DialogQueue
 import com.example.yummy.domain.use_case.get_recipe.GetRecipeDetailUseCase
+import com.example.yummy.presentation.util.ConnectivityManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -20,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
     private val getRecipeDetailUseCase: GetRecipeDetailUseCase,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val connectivityManager: ConnectivityManager
 ): ViewModel() {
 
     private val _state = mutableStateOf(RecipeDetailState())
@@ -35,7 +37,10 @@ class RecipeDetailViewModel @Inject constructor(
     }
 
     private fun getRecipeDetails(recipeId: String) {
-        getRecipeDetailUseCase.invoke(recipeId).onEach {
+        getRecipeDetailUseCase.invoke(
+            recipeId,
+            connectivityManager.isNetworkAvailable.value
+        ).onEach {
             when (it) {
                 is Resource.Success -> {
                     _state.value = RecipeDetailState(recipe = it.data)

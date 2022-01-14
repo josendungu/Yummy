@@ -20,16 +20,23 @@ class GetRecipesUseCase @Inject constructor(
     private val recipeDao: RecipeDao
 ) {
 
-    operator fun invoke(searchString: String, page: Int): Flow<Resource<List<RecipeDetail>>> =
+    operator fun invoke(
+        searchString: String,
+        page: Int,
+        isNetworkAvailable: Boolean
+    ): Flow<Resource<List<RecipeDetail>>> =
         flow {
             try {
                 emit(Resource.Loading())
 
-                if (searchString.isNotBlank()){
-                    val recipes = repository.getRecipeList(searchString, page).results.map {
-                        it.toRecipeDetail()
+
+                if (isNetworkAvailable){
+                    if (searchString.isNotBlank()){
+                        val recipes = repository.getRecipeList(searchString, page).results.map {
+                            it.toRecipeDetail()
+                        }
+                        recipeDao.insertRecipes(recipes.map { it.toRecipeDetailEntity() })
                     }
-                    recipeDao.insertRecipes(recipes.map { it.toRecipeDetailEntity() })
                 }
 
                 val cacheResults = if (searchString.isBlank()){

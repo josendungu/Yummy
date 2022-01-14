@@ -1,6 +1,5 @@
 package com.example.yummy.presentation.recipe_list
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -8,9 +7,9 @@ import com.example.yummy.common.Resource
 import com.example.yummy.domain.use_case.get_recipes.GetRecipesUseCase
 import androidx.lifecycle.viewModelScope
 import com.example.yummy.common.Constants.RECIPE_PAGINATION_PAGE_SIZE
-import com.example.yummy.common.Constants.TAG
 import com.example.yummy.common.util.DialogQueue
 import com.example.yummy.domain.model.RecipeDetail
+import com.example.yummy.presentation.util.ConnectivityManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
@@ -21,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipeListViewModel @Inject constructor(
     private val getRecipesUseCase: GetRecipesUseCase,
-    private val restoreRecipesUseCase: GetRecipesUseCase
+    private val restoreRecipesUseCase: GetRecipesUseCase,
+    private val connectivityManager: ConnectivityManager
 ) : ViewModel() {
 
     private val _state = mutableStateOf(RecipeListState())
@@ -44,7 +44,11 @@ class RecipeListViewModel @Inject constructor(
             recipes = recipes
         )
 
-        getRecipesUseCase.invoke(searchString, page).onEach {
+        getRecipesUseCase.invoke(
+            searchString,
+            page,
+            connectivityManager.isNetworkAvailable.value
+        ).onEach {
             when (it) {
                 is Resource.Success -> {
                     appendRecipe(it.data ?: emptyList())
