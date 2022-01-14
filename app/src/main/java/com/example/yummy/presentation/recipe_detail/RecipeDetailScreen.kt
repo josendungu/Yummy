@@ -19,15 +19,25 @@ import com.example.yummy.common.Constants
 import com.example.yummy.common.util.loadPicture
 import com.example.yummy.domain.model.RecipeDetail
 import com.example.yummy.presentation.ui.theme.Red500
+import com.example.yummy.presentation.ui.theme.YummyTheme
 
 @Composable
 fun RecipeDetailScreen(
-    viewModel: RecipeDetailViewModel = hiltViewModel()
+    viewModel: RecipeDetailViewModel = hiltViewModel(),
+    isNetworkAvailable: Boolean
 ) {
 
     val state = viewModel.state.value
+    val dialogQueue = viewModel.dialogQueue
 
-    Content(recipe = state.recipe, loading = state.isLoading, error = state.error)
+    YummyTheme(
+        dialogQueue = dialogQueue.queue.value,
+        isNetworkAvailable = isNetworkAvailable
+    ) {
+        Content(recipe = state.recipe, loading = state.isLoading, error = state.error)
+
+    }
+
 
 }
 

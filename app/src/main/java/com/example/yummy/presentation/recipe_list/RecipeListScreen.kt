@@ -25,13 +25,15 @@ import kotlinx.coroutines.delay
 @Composable
 fun RecipeListScreen(
     viewModel: RecipeListViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    isNetworkAvailable: Boolean
 ) {
 
     val dialogQueue = viewModel.dialogQueue
 
     YummyTheme(
-        dialogQueue = dialogQueue.queue.value
+        dialogQueue = dialogQueue.queue.value,
+        isNetworkAvailable = isNetworkAvailable
     ) {
         val state = viewModel.state.value
         Content(
@@ -41,7 +43,6 @@ fun RecipeListScreen(
                 viewModel.onChangeRecipeScrollPosition(it)
             },
             loadNextPage = {
-                Log.d(TAG, "RecipeListScreen: ${state.recipeIncrementLoading}")
                 if ((it + 1) >= (state.page * RECIPE_PAGINATION_PAGE_SIZE) && !state.recipeIncrementLoading) {
                     viewModel.nextPage()
                 }

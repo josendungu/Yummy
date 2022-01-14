@@ -44,8 +44,6 @@ class RecipeListViewModel @Inject constructor(
             recipes = recipes
         )
 
-        Log.d(TAG, "getRecipeList: Reloaded happening")
-
         getRecipesUseCase.invoke(searchString, page).onEach {
             when (it) {
                 is Resource.Success -> {

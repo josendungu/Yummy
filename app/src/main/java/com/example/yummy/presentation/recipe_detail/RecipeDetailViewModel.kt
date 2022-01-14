@@ -9,6 +9,7 @@ import com.example.yummy.common.Constants
 import androidx.lifecycle.viewModelScope
 import com.example.yummy.common.Constants.TAG
 import com.example.yummy.common.Resource
+import com.example.yummy.common.util.DialogQueue
 import com.example.yummy.domain.use_case.get_recipe.GetRecipeDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -25,6 +26,8 @@ class RecipeDetailViewModel @Inject constructor(
     private val _state = mutableStateOf(RecipeDetailState())
     val state: State<RecipeDetailState> =  _state
 
+    val dialogQueue = DialogQueue()
+
     init {
         savedStateHandle.get<String>(Constants.PARAM_RECIPE_ID)?.let {
             getRecipeDetails(it)
@@ -40,12 +43,12 @@ class RecipeDetailViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    _state.value = RecipeDetailState(error = it.message ?: "An unexpected error occurred")
+                    //_state.value = RecipeDetailState(error = it.message ?: "An unexpected error occurred")
+                    dialogQueue.appendErrorMessage("Error", it.message ?: "An unexpected error occurred")
 
                 }
 
                 is Resource.Loading -> {
-                    Log.d(TAG, "getRecipeDetails: loading")
                     _state.value = RecipeDetailState(isLoading = true)
                 }
             }

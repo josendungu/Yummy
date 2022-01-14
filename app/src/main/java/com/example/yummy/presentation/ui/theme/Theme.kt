@@ -1,11 +1,13 @@
 package com.example.yummy.presentation.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import com.example.yummy.common.util.DialogQueue
+import com.example.yummy.presentation.components.ConnectivityMonitor
 import com.example.yummy.presentation.components.GenericDialog
 import com.example.yummy.presentation.components.GenericDialogInfo
 import java.util.*
@@ -30,6 +32,7 @@ private val LightColorPalette = lightColors(
 fun YummyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dialogQueue: Queue<GenericDialogInfo>? = null,
+    isNetworkAvailable: Boolean,
     content: @Composable() () -> Unit
 ) {
     val colors = if (darkTheme) {
@@ -41,9 +44,14 @@ fun YummyTheme(
     MaterialTheme(
         colors = colors,
         typography = Typography,
-        shapes = Shapes,
-        content = content
-    )
+        shapes = Shapes
+    ){
+        Column {
+            ConnectivityMonitor(isNetworkAvailable = isNetworkAvailable)
+            content()
+        }
+
+    }
     if (dialogQueue != null) {
         ProcessDialogQueue(dialogQueue = dialogQueue)
     }
