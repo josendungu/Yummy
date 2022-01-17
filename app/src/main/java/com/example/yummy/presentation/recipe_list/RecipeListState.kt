@@ -12,4 +12,6 @@ data class RecipeListState(
     var recipeIncrementLoading: Boolean = false,
     var page: Int = 1,
     var recipeIncrementError: Boolean = false,
+    var searchString: String = "",
+    var searchDisplayState: Boolean = false
 )

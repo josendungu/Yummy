@@ -20,29 +20,29 @@ private val Montserrat = FontFamily(
 val Typography = Typography(
 
     h1 = TextStyle(
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.ExtraBold,
         fontFamily = Montserrat,
         fontSize = 30.sp,
     ),
     h2 = TextStyle(
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
         fontFamily = Montserrat,
         fontSize = 24.sp
     ),
     h3 = TextStyle(
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.SemiBold,
         fontFamily = Montserrat,
         fontSize = 20.sp
     ),
     h4 = TextStyle(
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.SemiBold,
         fontFamily = Montserrat,
         fontSize = 16.sp
     ),
     h5 = TextStyle(
         fontWeight = FontWeight.Medium,
         fontFamily = Montserrat,
-        fontSize = 14.sp
+        fontSize = 15.sp
     ),
     h6 = TextStyle(
         fontWeight = FontWeight.Medium,

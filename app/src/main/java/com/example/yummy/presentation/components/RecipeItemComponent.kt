@@ -1,5 +1,6 @@
 package com.example.yummy.presentation.components
 
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,13 +10,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.yummy.R
 import com.example.yummy.common.Constants
 import com.example.yummy.common.util.loadPicture
 import com.example.yummy.domain.model.RecipeDetail
@@ -32,6 +30,7 @@ fun RecipeItemComponent(
             .padding(vertical = 6.dp, horizontal = 30.dp)
             .clickable { onClick() },
         shape = MaterialTheme.shapes.small,
+        backgroundColor = MaterialTheme.colors.primary,
         elevation = 7.dp,
     ) {
         Column {
@@ -61,7 +60,8 @@ fun RecipeItemComponent(
                     modifier = Modifier
                         .fillMaxWidth(0.85f)
                         .wrapContentWidth(Alignment.Start),
-                    style = MaterialTheme.typography.h5
+                    style = MaterialTheme.typography.h5,
+                    color = Color.White
                 )
 
                 Text(
@@ -70,7 +70,8 @@ fun RecipeItemComponent(
                         .fillMaxWidth()
                         .wrapContentWidth(Alignment.End)
                         .align(Alignment.CenterVertically),
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTheme.typography.h6,
+                    color = Color.White
                 )
             }
         }

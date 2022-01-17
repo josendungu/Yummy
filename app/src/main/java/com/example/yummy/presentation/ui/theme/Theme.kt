@@ -6,33 +6,33 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import com.example.yummy.common.util.DialogQueue
+import androidx.compose.ui.graphics.Color
 import com.example.yummy.presentation.components.ConnectivityMonitor
 import com.example.yummy.presentation.components.GenericDialog
 import com.example.yummy.presentation.components.GenericDialogInfo
 import java.util.*
 
 private val DarkColorPalette = darkColors(
-    primary = Red500,
-    primaryVariant = Red200,
-    secondary = White500,
-    background = DarkGrey
+    primary = PrimaryDark,
+    primaryVariant = PrimaryVariant,
+    secondary = Secondary,
+    background = DarkGrey,
+    onPrimary = onSecondary
 )
 
 private val LightColorPalette = lightColors(
-    primary = Red500,
-    primaryVariant = Red200,
-    secondary = White500,
-    background = White700
-
-
+    primary = Primary,
+    primaryVariant = PrimaryVariant,
+    secondary = Secondary,
+    background = Color.White,
+    onPrimary = onPrimary
 )
 
 @Composable
 fun YummyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dialogQueue: Queue<GenericDialogInfo>? = null,
-    isNetworkAvailable: Boolean,
+    isNetworkAvailable: Boolean = true,
     content: @Composable() () -> Unit
 ) {
     val colors = if (darkTheme) {
@@ -50,7 +50,6 @@ fun YummyTheme(
             ConnectivityMonitor(isNetworkAvailable = isNetworkAvailable)
             content()
         }
-
     }
     if (dialogQueue != null) {
         ProcessDialogQueue(dialogQueue = dialogQueue)

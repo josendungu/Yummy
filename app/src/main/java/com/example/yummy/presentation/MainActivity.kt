@@ -9,6 +9,7 @@ import androidx.compose.material.Surface
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.yummy.datastore.SettingsDataStore
 import com.example.yummy.presentation.recipe_detail.RecipeDetailScreen
 import com.example.yummy.presentation.recipe_list.RecipeListScreen
 import com.example.yummy.presentation.ui.theme.YummyTheme
@@ -21,6 +22,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var connectivityManager: ConnectivityManager
+
+    @Inject
+    lateinit var settingsDataStore: SettingsDataStore
 
     override fun onStart() {
         super.onStart()
@@ -36,6 +40,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+
             // A surface container using the 'background' color from the theme
             Surface(color = MaterialTheme.colors.background) {
                 val navController = rememberNavController()
@@ -49,7 +54,9 @@ class MainActivity : ComponentActivity() {
                     ) {
                         RecipeListScreen(
                             navController = navController,
-                            isNetworkAvailable = connectivityManager.isNetworkAvailable.value
+                            isNetworkAvailable = connectivityManager.isNetworkAvailable.value,
+                            isDark = settingsDataStore.isDark.value,
+                            toggleTheme = settingsDataStore::toggleTheme
                         )
                     }
 
@@ -57,12 +64,14 @@ class MainActivity : ComponentActivity() {
                         route = Screen.RecipeDetailScreen.route + "/{recipeId}"
                     ) {
                         RecipeDetailScreen(
-                            isNetworkAvailable = connectivityManager.isNetworkAvailable.value
+                            isNetworkAvailable = connectivityManager.isNetworkAvailable.value,
+                            isDark = settingsDataStore.isDark.value
                         )
                     }
 
                 }
             }
+
 
         }
     }

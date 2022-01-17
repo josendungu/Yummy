@@ -1,12 +1,15 @@
 package com.example.yummy.presentation.recipe_list
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import com.example.yummy.common.Resource
 import com.example.yummy.domain.use_case.get_recipes.GetRecipesUseCase
 import androidx.lifecycle.viewModelScope
 import com.example.yummy.common.Constants.RECIPE_PAGINATION_PAGE_SIZE
+import com.example.yummy.common.Constants.TAG
 import com.example.yummy.common.util.DialogQueue
 import com.example.yummy.domain.model.RecipeDetail
 import com.example.yummy.presentation.util.ConnectivityManager
@@ -28,6 +31,8 @@ class RecipeListViewModel @Inject constructor(
     val state: State<RecipeListState> = _state
     var recipeListScrollPosition = 0
 
+    val textFieldSearchString = mutableStateOf("")
+
     val dialogQueue = DialogQueue()
 
     init {
@@ -35,7 +40,7 @@ class RecipeListViewModel @Inject constructor(
     }
 
     private fun getRecipeList() {
-        val searchString = "Beef"
+        val searchString = state.value.searchString
         val page = state.value.page
         val recipes = state.value.recipes
 
@@ -88,17 +93,6 @@ class RecipeListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun resetState() {
-        _state.value = RecipeListState(
-            recipes = emptyList(),
-            error = "",
-            isLoading = false,
-            page = 1,
-            recipeIncrementLoading = false,
-            recipeIncrementError = false
-        )
-    }
-
     private fun incrementPage() {
         state.value.page += 1
     }
@@ -125,5 +119,29 @@ class RecipeListViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun toggleSearch() {
+        val page = state.value.page
+        val recipes = state.value.recipes
+        val searchString = state.value.searchString
+        val currentDisplayState = state.value.searchDisplayState
+
+        _state.value = RecipeListState(
+            recipes = recipes,
+            page = page,
+            searchString = searchString,
+            searchDisplayState = !currentDisplayState
+        )
+    }
+
+    fun handleSearch() {
+        _state.value = RecipeListState(searchString = textFieldSearchString.value)
+        textFieldSearchString.value = ""
+        getRecipeList()
+    }
+
+    fun onTextStringValueChanged(newString: String) {
+        textFieldSearchString.value = newString
     }
 }

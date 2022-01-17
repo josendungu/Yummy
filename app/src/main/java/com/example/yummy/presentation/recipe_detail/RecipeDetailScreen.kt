@@ -1,15 +1,17 @@
 package com.example.yummy.presentation.recipe_detail
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
@@ -18,13 +20,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.yummy.common.Constants
 import com.example.yummy.common.util.loadPicture
 import com.example.yummy.domain.model.RecipeDetail
-import com.example.yummy.presentation.ui.theme.Red500
 import com.example.yummy.presentation.ui.theme.YummyTheme
 
 @Composable
 fun RecipeDetailScreen(
     viewModel: RecipeDetailViewModel = hiltViewModel(),
-    isNetworkAvailable: Boolean
+    isNetworkAvailable: Boolean,
+    isDark: Boolean
 ) {
 
     val state = viewModel.state.value
@@ -32,9 +34,14 @@ fun RecipeDetailScreen(
 
     YummyTheme(
         dialogQueue = dialogQueue.queue.value,
-        isNetworkAvailable = isNetworkAvailable
+        isNetworkAvailable = isNetworkAvailable,
+        darkTheme = isDark
     ) {
-        Content(recipe = state.recipe, loading = state.isLoading, error = state.error)
+
+        Column {
+
+            Content(recipe = state.recipe, loading = state.isLoading, error = state.error)
+        }
 
     }
 
@@ -48,7 +55,11 @@ fun Content(
     error: String
 ) {
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+    ) {
 
         recipe?.let {
             LazyColumn(
@@ -77,7 +88,7 @@ fun Content(
                     Text(
                         text = recipe.title,
                         style = MaterialTheme.typography.h3,
-                        color = Red500,
+                        color = MaterialTheme.colors.primary,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 15.dp, vertical = 5.dp)
@@ -89,6 +100,7 @@ fun Content(
                             .padding(horizontal = 20.dp, vertical = 5.dp),
                         text = "Cooking Instructions",
                         style = MaterialTheme.typography.h4,
+                        color = MaterialTheme.colors.onPrimary
                     )
 
                 }
@@ -97,7 +109,9 @@ fun Content(
                     Text(
                         text = instruction,
                         style = MaterialTheme.typography.h5,
-                        modifier = Modifier.padding(horizontal = 20.dp)
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        color = MaterialTheme.colors.onPrimary
+
                     )
                 }
 
@@ -123,6 +137,8 @@ fun Content(
 
 
 }
+
+
 
 
 
