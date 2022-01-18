@@ -29,7 +29,6 @@ class GetRecipesUseCase @Inject constructor(
             try {
                 emit(Resource.Loading())
 
-
                 if (isNetworkAvailable){
                     if (searchString.isNotBlank()){
                         val recipes = repository.getRecipeList(searchString, page).results.map {
