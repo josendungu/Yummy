@@ -11,6 +11,9 @@ object Constants {
     const val TAG = "AppDebug"
     const val RECIPE_DATABASE = "recipe_db"
     const val RECIPE_PAGINATION_PAGE_SIZE = 30
+    const val STATE_KEY_PAGE = "recipe.state.page.key"
+    const val STATE_KEY_QUERY = "recipe.state.query.key"
+    const val STATE_KEY_LIST_POSITION = "recipe.state.list.position.key"
 
 
 }

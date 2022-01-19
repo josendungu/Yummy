@@ -15,3 +15,4 @@ data class RecipeListState(
     var searchString: String = "",
     var searchDisplayState: Boolean = false
 )
+

@@ -115,6 +115,22 @@ fun Content(
                 .background(MaterialTheme.colors.background)
         ) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
+
+                item {
+
+                    val text = if (state.searchString.isBlank()){
+                        "Displaying all recipes"
+                    } else {
+                        "Displaying ${state.searchString} recipes"
+                    }
+                    Text(
+                        text = text,
+                        style = MaterialTheme.typography.h6,
+                        modifier = Modifier.alpha(ContentAlpha.medium),
+                        color = MaterialTheme.colors.primary
+                    )
+                }
+
                 itemsIndexed(items = recipes) { index, recipe ->
                     onItemChangePosition(index)
                     loadNextPage(index)
